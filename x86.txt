@@ -28,3 +28,10 @@
         call some_function
     
 - Include: %include "file_name.asm"
+
+- Segment Registers:
+    * Main memory is divided into segments, indexed by special registers
+    
+    * cs, ds, ss, es
+
+    

@@ -1,6 +1,6 @@
 ;
 ; Prints the characters of a null-terminated string 
-; to the terminal
+; to the screen
 ;
 ; reg bx: location of beginning of string
 ;

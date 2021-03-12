@@ -4,7 +4,7 @@
 ;
 ; Source: https://www.cs.bham.ac.uk/~exr/lectures/opsys/10_11/lectures/os-dev.pdf
 ; 
-; Last section: 3.5.1
+; Last section: 3.6.2
 ;
 
 [org 0x7c00] ; tells the assembler where this code will be loaded
@@ -17,7 +17,7 @@ jmp $ ; infinite loop, jump to current address forever
 %include "modules/print_string.asm"
 
 my_string:
-    db 'Booting OS', 0 ; null-terminated string
+    db 'Booting OS',0 ; null-terminated string
 
 ;
 ; Padding and Magic number
