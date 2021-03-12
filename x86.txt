@@ -1,0 +1,30 @@
+- All x86 CPUs have four general purpose registers:
+    * ax, bx, cx, dx: max size = 2 bytes
+
+- BIOS loads boot sector to address: 0x7c00
+
+- The stack is implemented by registers: bp and sp (address to stack bottom and top)
+
+- The following jump instructions are available base on: cmp x, y
+    * je   target   ; jump if equal                    (i.e. x == y)
+    * jne  target   ; jump if not  equal               (i.e. x != y)
+    * jl   target   ; jump if less  than               (i.e. x < y)
+    * jle  target   ; jump if less  than or  equal     (i.e. x  <= y)
+    * jg   target   ; jump if  greater  than           (i.e. x > y)
+    * jge  target   ; jump if  greater  than or  equal (i.e. x  >= y)
+
+- Functions in x86 Assembly:
+    * pusha and popa so the function doesn't destroy
+      any values stored in the general purpose registers.
+
+    * Definition:
+        some_function:
+            pusha   ; push all register values to the stack
+            ...     ; function body
+            popa    ; restore register values
+            ret
+
+    * Invocation:
+        call some_function
+    
+- Include: %include "file_name.asm"
