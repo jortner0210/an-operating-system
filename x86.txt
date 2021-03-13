@@ -96,6 +96,11 @@
             - foreground, background, blinking
 
 - Global Descriptor Table:
+    * Fundamental to the operation of protected mode
+
+    * In 32 bit mode a segment register becomes an index to a particular
+      segment descriptor in the GDT
+
     * A segment descriptor is an 8-byte structure that defines the 
       following properties of a pretected-mode segment:
         + Base address (32-bits), which defines where the segment begins
@@ -104,3 +109,43 @@
         + Various flags, which affect how the CPU interprets the segment,
           such as the privilige level of code that runs winit it or whether
           it is read or write only.
+
+- Code segment will have following configuration:
+    * Base: 0x0
+    * Limit: 0xfffff
+    * Present: 1, since segment is present in memory - used for virtual memory
+    * Privilige: 0, ring 0 is the highest privilige
+    * Type:
+        - Code: 1 for code since this is a code segment
+        - Conforming: 0, by not conforming it means code in a segment with a lower
+                      privilige may not call code in this segment - memory protection
+        - Readable: 1, 1 if readable, 0 if execute only. Readable allows us to read
+                    constants defined in the code.
+        - Accessed: 0, this is often used for debugging and vm techniques,
+                    since the CPU sets the bit when it accesses the segement.
+    * Other Flags:
+        - Granularity: 1, if set this multiplies limit of 4K allowing segment to span 4GB
+        - 32-bit default: 1, since our segment will hold 32-bit code, otherwise use 0 for 16-bit
+        - 64-bit code segment: 0, unused on 32-bit processor
+        - AVL: 0, debugging uses
+
+
+- GDT descriptor:
+    * 6 byte structure
+        + GDT size: 16 bits
+        + GDT address: 32 bits
+
+- Switch to 32-bit protected mode:
+    * First: disable interrupts using cli (clear interrupt)
+    * Second: tell the CPU about the GDT 
+        - lgdt [gdt_descriptor]
+    * Last: set the first bit of special CPU control register (cr0)
+        - must be set indirectly
+        mov eax, cr0 ; To make the switch to protected mode, we set
+        or eax, 0x1  ; the first bit of CRO, a control register.
+        mov cr0, eac
+    * Last Last: instruct the CPU to finish any jobs in its pipeline
+                 to ensure that all future instructions will be executed
+                 in the correct mode.
+        - Issuing a far jump will force the CPU to flush the pipeline 
+        jmp <segment>:<address offset>

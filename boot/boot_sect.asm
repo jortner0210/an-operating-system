@@ -7,40 +7,38 @@
 ; Last section: 4.2
 ;
 
-[org 0x7c00] ; tells the assembler where this code will be loaded
+[org 0x7c00] ; Tells the assembler where this code will be loaded
 
-mov [BOOT_DRIVE], dl
-
-mov bp, 0x8000
+mov bp, 0x9000 ; Set the Stack
 mov sp, bp
 
-mov bx, 0x9000
-mov dh, 5
-mov dl, [BOOT_DRIVE]
-call disk_load
+mov bx, MSG_REAL_MODE
+call print_string
 
-mov dx, [0x9000]
-call print_hex
+call switch_to_pm   ; Note: THE POINT OF NO RETURN
 
-mov dx, [0x9000 + 512]
-call print_hex
+jmp $ 
 
-jmp $ ; infinite loop, jump to current address forever
+%include "modules/print_string.asm"
+%include "modules/print_string_pm.asm"
+%include "modules/switch_to_pm.asm"
+%include "modules/init_gdt.asm"
 
-%include "modules/16-bit/print_string.asm"
-%include "modules/16-bit/print_hex.asm"
-%include "modules/16-bit/disk_load.asm"
+; This is where we arrive after switching to protected mode
+BEGIN_PM:
+    mov bx, MSG_PROT_MODE
+    call print_string_pm    ; Use 32-bit print routine
+
+    jmp $
 
 ;
 ; Global Variable
 ;
-BOOT_DRIVE: db 0
+MSG_REAL_MODE: db "Started in 16-bit Real Mode", 0
+MSG_PROT_MODE: db "Successfully landed in 32-bit Protected Mode", 0
 
 ;
 ; Padding and Magic number
 ;
 times 510-($-$$) db 0 ; padding - program must fit 512 bytes
 dw 0xaa55             ; boot sector magic number
-
-times 256 dw 0xface
-times 256 dw 0xdada
