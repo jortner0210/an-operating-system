@@ -1,3 +1,32 @@
+- Useful interrupts:
+    * int 10/ah = 0eh -> scrolling teletype BIOS routine
+        - prints character located in register al
+
+    * int 13/ah = 0x02 -> BIOS read sector function
+        - dl = drive number to read from (base 0)
+        - ch = cylinder number (base 1)
+        - dh = side to use (base 0: 0 - first side or 1 - second side)
+        - cl = sector number on the track (base 1)
+        - al = how many sectors to read from the start point
+        - es:bx = the address we'd like BIOS to read the sectors to
+        
+        - Results:
+            + CF flag = set when read error occurs
+            + al = set to number of sectors ACTUALLY read, opposed to the number requested
+            + example check:
+                int 0x13
+                jc disk_error ; jump if carry flag was set
+                
+                cmp al, <no. sectors expected>
+                jne disk_error ; jump if read sectors != expected sectors
+
+                disk_error:
+                    mov bx, DISK_ERROR_MSG
+                    call print_string
+                    jmp $
+
+                DISK_ERROR_MSG: db "Disk read error!",0                
+
 - All x86 CPUs have four general purpose registers:
     * ax, bx, cx, dx: max size = 2 bytes
 
@@ -34,4 +63,44 @@
     
     * cs, ds, ss, es
 
+- 32 bit protected mode:
+    * 32 bit registers accessed with prefix 'e', i.e. ebx
+
+    * Two additional general purpose segment registers: fs, gs
+
+    * The CPU supports a more sophisticated means of memory segmentation:
+        + Code in one segment can be prohibited from executing code in another
+          more privilidged segment, so you can protect the kernel code from user
+          applications.
+
+        + The CPU can implement virtual memory for user processes such that pages, 
+          (fixed sized chunks) of a process's memory can be swapped transparently
+          between the disk and memory on an as needed basis.
     
+    * Must define a data structure call the global descriptor table (GDT)
+        + defines memory segments and their protected-mode attributes
+
+    * CAN'T USE BIOS IN 32 BIT MODE
+        + must provide own drivers for: keyboard, screen, disk drives, mouse
+
+- Video Graphics Array (VGA) color text mode:
+    * Usually Address: 0xb8000
+
+    * Dimensions 80x25 characters
+
+    * A simple font is defined in the internal memory of the VGA display device
+
+    * Each character cell of the screen is represented by two bytes in memory:
+        + first: ASCII code of character
+        + second: encodes the character's attributes
+            - foreground, background, blinking
+
+- Global Descriptor Table:
+    * A segment descriptor is an 8-byte structure that defines the 
+      following properties of a pretected-mode segment:
+        + Base address (32-bits), which defines where the segment begins
+          in physical memory
+        + Segment Limit (20 bits), which defines the size of the segment
+        + Various flags, which affect how the CPU interprets the segment,
+          such as the privilige level of code that runs winit it or whether
+          it is read or write only.
