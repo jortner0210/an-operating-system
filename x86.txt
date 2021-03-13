@@ -129,7 +129,6 @@
         - 64-bit code segment: 0, unused on 32-bit processor
         - AVL: 0, debugging uses
 
-
 - GDT descriptor:
     * 6 byte structure
         + GDT size: 16 bits
@@ -149,3 +148,7 @@
                  in the correct mode.
         - Issuing a far jump will force the CPU to flush the pipeline 
         jmp <segment>:<address offset>
+
+- Kernel Code:
+    * Compiling C code:
+        - -Ttext 0x0

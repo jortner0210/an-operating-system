@@ -5,19 +5,19 @@
 [bits 16]
 
 switch_to_pm:
-    cli     ; We must switch off interrupts until we have
-            ; set up the protected mode interrupt vector
+    cli                   ; We must switch off interrupts until we have
+                          ; set up the protected mode interrupt vector
 
     lgdt [gdt_descriptor] ; Load our global descriptor table which defines
                           ; the protected mode segments for code and data
 
-    mov eax, cr0    ; To make the switch to protected mode, set
-    or eax, 0x1     ; the first bit of CRO, a control register
-    mov cr0, eax    ; Must be set indirectly
+    mov eax, cr0          ; To make the switch to protected mode, set
+    or eax, 0x1           ; the first bit of CRO, a control register
+    mov cr0, eax          ; Must be set indirectly
 
-    jmp CODE_SEG:init_pm ; Make a far jump (i.e to a new segment) to our 
-                         ; 32-bit code. This forces the CPU to flush its cache
-                         ; and pre-fetched/real-mode instructions which can cause issues
+    jmp CODE_SEG:init_pm  ; Make a far jump (i.e to a new segment) to our 
+                          ; 32-bit code. This forces the CPU to flush its cache
+                          ; and pre-fetched/real-mode instructions which can cause issues
 
 [bits 32]
 ; Initialize registers and the stack once in PM

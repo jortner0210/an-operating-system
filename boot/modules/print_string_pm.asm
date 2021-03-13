@@ -15,19 +15,19 @@ WHITE_ON_BLACK equ 0x0f
 
 print_string_pm:
     pusha
-    mov edx, VIDEO_MEMORY ; Set edx to the start of vid mem
+    mov edx, VIDEO_MEMORY   ; Set edx to the start of vid mem
 
 print_string_pm_loop:
-    mov al, [ebx]          ; Store the char at EBX in AL
-    mov ah, WHITE_ON_BLACK ; Store the attributes in AH
+    mov al, [ebx]           ; Store the char at EBX in AL
+    mov ah, WHITE_ON_BLACK  ; Store the attributes in AH
 
-    cmp al, 0 ; if (al == 0), at end of string, jmp to done
+    cmp al, 0               ; if (al == 0), at end of string, jmp to done
     je print_string_pm_done  
 
-    mov [edx], ax ; Store char and attributes at current char cell
+    mov [edx], ax           ; Store char and attributes at current char cell
 
-    add ebx, 1 ; Increment EBX to the next char in the string
-    add edx, 2 ; Move to next character cell in vid mem
+    add ebx, 1              ; Increment EBX to the next char in the string
+    add edx, 2              ; Move to next character cell in vid mem
 
     jmp print_string_pm_loop
 
