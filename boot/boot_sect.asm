@@ -27,9 +27,9 @@ call print_hex
 
 jmp $ ; infinite loop, jump to current address forever
 
-%include "modules/print_string.asm"
-%include "modules/print_hex.asm"
-%include "modules/disk_load.asm"
+%include "modules/16-bit/print_string.asm"
+%include "modules/16-bit/print_hex.asm"
+%include "modules/16-bit/disk_load.asm"
 
 ;
 ; Global Variable
@@ -42,5 +42,5 @@ BOOT_DRIVE: db 0
 times 510-($-$$) db 0 ; padding - program must fit 512 bytes
 dw 0xaa55             ; boot sector magic number
 
-times 256 dw 0xFACE
-times 256 dw 0x0000
+times 256 dw 0xface
+times 256 dw 0xdada
