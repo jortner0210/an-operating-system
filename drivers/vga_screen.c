@@ -1,8 +1,26 @@
 #include "vga_screen.h"
 
 #include "../kernel/x86asm.h"
+#include "../kernel/utils.h"
 
 /*---------------------- EXTERNAL API ----------------------------*/
+
+//
+// Retreive the row and col location of the cursor
+//
+void vga_get_cursor_location(int *row, int *col)
+{
+    int offset;
+    outb(VGA_ADDRESS_REG, VGA_CURSOR_LOCATION_HIGH);
+    offset = inb(VGA_DATA_REG) << 8;
+    outb(VGA_ADDRESS_REG, VGA_CURSOR_LOCATION_LOW);
+    offset += inb(VGA_DATA_REG);
+
+    // VGA hardware reports cursor location as character offset.
+    // Multiply by two to get cell location. 
+    (*row) = offset / VGA_BUFFER_WIDTH;
+    (*col) = offset % VGA_BUFFER_WIDTH;
+}
 
 //
 // Sets the screen cursor to a location.
@@ -36,11 +54,54 @@ void vga_clear_screen()
             video_memory[idx] = 0;
         }       
     }
+    vga_set_cursor_location(0, 0);
+}
+
+void vga_print_string(char *string, unsigned char attribute)
+{
+    int idx = 0;
+    int cur_row, cur_col;
+
+    while (string[idx] != '\0') {
+        vga_get_cursor_location(&cur_row, &cur_col);
+
+        if (string[idx] == '\n') {
+            vga_set_cursor_location(cur_row + 1, 0);
+        }
+        else {
+            vga_print_char(string[idx], cur_row, cur_col, attribute);
+            if (cur_col + 1 == VGA_BUFFER_WIDTH) {
+                vga_set_cursor_location(cur_row + 1, 0);
+            }
+            else {
+                vga_set_cursor_location(cur_row, cur_col + 1);
+            }
+        }
+                        
+        idx++;
+    }
+
+    // Handle scrolling
+    vga_get_cursor_location(&cur_row, &cur_col);
+    if (cur_row == VGA_BUFFER_HEIGHT) {
+        for (int r = 1; r < VGA_BUFFER_HEIGHT; r++) {
+            //vga_clear_row(r);
+            char *video_memory = (char *)VGA_VIDEO_MEMORY;
+
+            memcopy(video_memory + vga_get_cell_offset(r-1, 0), 
+                    video_memory + vga_get_cell_offset(r, 0), 
+                    VGA_BUFFER_WIDTH * 2);
+        }
+
+        vga_clear_row(VGA_BUFFER_HEIGHT - 1);
+
+        vga_set_cursor_location(24, 0);
+    }
 }
 
 /*---------------------- INTERNAL API ----------------------------*/
 
-int vga_print_char(unsigned char c, int row, int col, unsigned char attibute)
+static int vga_print_char(unsigned char c, int row, int col, unsigned char attibute)
 {
     int offset = vga_get_cell_offset(row, col);
     unsigned char *video_memory = (char *)VGA_VIDEO_MEMORY;
@@ -56,4 +117,18 @@ int vga_print_char(unsigned char c, int row, int col, unsigned char attibute)
 static int vga_get_cell_offset(int row, int col)
 {
     return (row * VGA_BUFFER_WIDTH + col) * 2;
+}
+
+static void scroll_screen()
+{
+    unsigned char *video_memory_copy;
+}
+
+int vga_clear_row(int row)
+{
+    char *video_memory = (char *)VGA_VIDEO_MEMORY;
+    int offset = vga_get_cell_offset(row, 0);
+    video_memory += offset;
+    for (int i = 0; i < VGA_BUFFER_WIDTH * 2; i++)
+        video_memory[i] = 0;
 }
