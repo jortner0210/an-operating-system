@@ -1,7 +1,7 @@
 #include "x86asm.h"
 
 // Drivers
-#include "../drivers/vga_buffer.h"
+#include "../drivers/vga_screen.h"
 
 
 void main() {

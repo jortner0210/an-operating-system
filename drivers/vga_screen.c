@@ -1,4 +1,4 @@
-#include "vga_buffer.h"
+#include "vga_screen.h"
 
 #include "../kernel/x86asm.h"
 
