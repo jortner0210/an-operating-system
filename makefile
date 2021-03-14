@@ -8,7 +8,7 @@ HEADERS = $(wildcard  kernel/*.h drivers/*.h)
 OBJ = ${C_SOURCES:.c=.o}
 
 # Defaul  build  target
-all: os-image
+all: os-image to-bin
 
 # Run  bochs  to  simulate  booting  of our  code.
 run: all
@@ -36,7 +36,14 @@ kernel.bin: kernel/kernel_entry.o ${OBJ}
 
 %.bin : %.asm
 	nasm $< -f bin -I  "./boot/module" -o $@
+
+to-bin:
+	find ./kernel ./boot ./drivers -type f -name "*.o" -exec mv -t bin/ {} +
+	find ./kernel ./boot ./drivers -type f -name "*.bin" -exec mv -t bin/ {} +
+	mv ./kernel.bin bin/kernel.bin
+	mv os-image bin/os-image
 	
 clean:
+	rm -fr bin/*.bin bin/*.o bin/os-image
 	rm -fr *.bin *.dis *.o os-image
 	rm -fr  kernel/*.o boot/*.bin  drivers/*.o

@@ -2,5 +2,5 @@
 # a floppy  disk  inserted  into a computer  at boot  time.
 # OLD: floppya: 1_44=boot_sect.bin, status=inserted
 
-floppya: 1_44=os-image, status=inserted
+floppya: 1_44=bin/os-image, status=inserted
 boot: a

@@ -1,6 +1,6 @@
 #include "vga_buffer.h"
 
-#include "../kernel/low_level.h"
+#include "../kernel/x86asm.h"
 
 /*---------------------- EXTERNAL API ----------------------------*/
 
@@ -15,7 +15,7 @@ int vga_set_cursor_location(int row, int col)
     if ((row * col) >= (VGA_BUFFER_HEIGHT * VGA_BUFFER_WIDTH))
         return 0;
     else {
-        int offset = vga_get_char_offset(row, col);
+        int offset = vga_get_cell_offset(row, col) / 2;
         outb(VGA_ADDRESS_REG, VGA_CURSOR_LOCATION_HIGH);
         outb(VGA_DATA_REG, (unsigned char)(offset >> 8));
 
@@ -24,6 +24,9 @@ int vga_set_cursor_location(int row, int col)
     }   
 }
 
+//
+// Sets the entire VGA memory buffer to 0
+//
 void vga_clear_screen()
 {
     char *video_memory = (char *)VGA_VIDEO_MEMORY;
@@ -37,10 +40,12 @@ void vga_clear_screen()
 
 /*---------------------- INTERNAL API ----------------------------*/
 
-
-static int vga_get_char_offset(int row, int col)
+int vga_print_char(unsigned char c, int row, int col, unsigned char attibute)
 {
-    return (row * VGA_BUFFER_WIDTH + col);
+    int offset = vga_get_cell_offset(row, col);
+    unsigned char *video_memory = (char *)VGA_VIDEO_MEMORY;
+    video_memory[offset] = c;
+    video_memory[offset+1] = attibute;
 }
 
 //
@@ -50,5 +55,5 @@ static int vga_get_char_offset(int row, int col)
 //
 static int vga_get_cell_offset(int row, int col)
 {
-    return vga_get_char_offset(row, col) * 2;
+    return (row * VGA_BUFFER_WIDTH + col) * 2;
 }
