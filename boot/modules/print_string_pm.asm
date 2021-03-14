@@ -9,10 +9,16 @@
 ;
 
 [bits 32]
+
+;
 ; Contants
+;
 VIDEO_MEMORY equ 0xb8000
 WHITE_ON_BLACK equ 0x0f
 
+;
+; Routine
+;
 print_string_pm:
     pusha
     mov edx, VIDEO_MEMORY   ; Set edx to the start of vid mem

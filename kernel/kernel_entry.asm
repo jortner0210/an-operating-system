@@ -1,8 +1,10 @@
+;
+; Kernel entry to ensure main is called
+;
+
 [bits 32]
-[extern main] ; Declare that we will be referencing the external symbol 'main'
-              ; so the linker can substitute the final address
+[extern main] 
 
 call main     ; Invoke main() in our C kernel
 
 jmp $
-

@@ -1,3 +1,5 @@
+- Print hex of binary: od -t x1 -A n <file_name>
+
 - Useful interrupts:
     * int 10/ah = 0eh -> scrolling teletype BIOS routine
         - prints character located in register al

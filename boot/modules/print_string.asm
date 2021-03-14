@@ -1,8 +1,7 @@
 ;
-; Prints the characters of a null-terminated string 
-; to the screen
+; Prints the characters of a null-terminated string to the screen
 ;
-; Register bx: location of beginning of string
+; Register BX: location of beginning of string
 ;
 print_string:
     pusha

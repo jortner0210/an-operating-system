@@ -2,6 +2,14 @@
 ; Load DH sectors to ES:BX from drive DL
 ;
 
+;
+; Constants
+;
+DISK_ERROR_MSG: db "Disk read error!", 0
+
+;
+; Routine
+;
 disk_load:
     push dx         ; Store DX on the stack so later we can recall
                     ; how many sectors were requested to be read,
@@ -27,6 +35,3 @@ disk_error:
     mov bx, DISK_ERROR_MSG
     call print_string
     jmp $
-
-; Variables
-DISK_ERROR_MSG: db "Disk read error!", 0

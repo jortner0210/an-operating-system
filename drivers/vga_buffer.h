@@ -18,18 +18,6 @@
 #define VGA_BUFFER_HEIGHT 25
 #define VGA_BUFFER_WIDTH  80
 
-// VGA Colors
-#define VGA_BLACK 0x0
-#define VGA_BLUE  0x1
-#define VGA_GREEN 0x2
-
-enum vga_colors
-{
-    vga_black = 0x0,
-    vga_blue  = 0x1,
-    vga_green = 0x2
-};
-
 // Default color scheme
 #define WHITE_ON_BLACK 0x0f
 
@@ -40,6 +28,13 @@ enum vga_colors
 // VGA Registers
 #define VGA_CURSOR_LOCATION_HIGH 0x0e
 #define VGA_CURSOR_LOCATION_LOW  0x0f
+
+enum vga_colors
+{
+    vga_black = 0x0,
+    vga_blue  = 0x1,
+    vga_green = 0x2
+};
 
 
 /*---------------------- EXTERNAL API ----------------------------*/

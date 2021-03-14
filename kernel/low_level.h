@@ -1,6 +1,3 @@
-
-// TO DO: CHANGE NAME TO "inline_asm"
-
 unsigned char inb(unsigned short port);
 
 void outb(unsigned short port, unsigned char data);
