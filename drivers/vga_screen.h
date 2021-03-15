@@ -18,20 +18,13 @@
 
 #define VGA_VIDEO_MEMORY 0xb8000
 
-#define VGA_BUFFER_HEIGHT 25
-#define VGA_BUFFER_WIDTH  80
-
-
 #define VGA_MAX_ROWS 25
 #define VGA_MAX_COLS 80
-
 
 // Default color scheme
 #define WHITE_ON_BLACK 0x0f
 
 // Screen device I/O ports
-#define VGA_ADDRESS_REG 0x3d4
-
 #define VGA_CTRL_REG 0x3d4
 #define VGA_DATA_REG 0x3d5
 
@@ -106,6 +99,6 @@ static int vga_get_cell_offset(int row, int col);
 
 static void vga_scroll_screen();
 
-int vga_clear_row(int row);
+static int vga_clear_row(int row);
 
 #endif

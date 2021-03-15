@@ -39,9 +39,9 @@ int vga_set_cursor_position(int row, int col)
 void vga_clear_screen()
 {
     char *video_memory = (char *)VGA_VIDEO_MEMORY;
-    for (int i = 0; i < VGA_BUFFER_HEIGHT; i++) {
-        for (int j = 0; j < VGA_BUFFER_WIDTH; j++) {
-            int idx = (i * VGA_BUFFER_WIDTH + j) * 2;
+    for (int i = 0; i < VGA_MAX_ROWS; i++) {
+        for (int j = 0; j < VGA_MAX_COLS; j++) {
+            int idx = (i * VGA_MAX_COLS + j) * 2;
             video_memory[idx] = 0;
         }       
     }
@@ -97,7 +97,7 @@ static int vga_print_char(unsigned char c, int row, int col, unsigned char attib
 //
 static int vga_get_cell_offset(int row, int col)
 {
-    return (row * VGA_BUFFER_WIDTH + col) * 2;
+    return (row * VGA_MAX_COLS + col) * 2;
 }
 
 static void vga_scroll_screen()
@@ -110,11 +110,11 @@ static void vga_scroll_screen()
     }
 }
 
-int vga_clear_row(int row)
+static int vga_clear_row(int row)
 {
     char *video_memory = (char *)VGA_VIDEO_MEMORY;
-    for (int j = 0; j < VGA_BUFFER_WIDTH; j++) {
-        int idx = (row * VGA_BUFFER_WIDTH + j) * 2;
+    for (int j = 0; j < VGA_MAX_COLS; j++) {
+        int idx = (row * VGA_MAX_COLS + j) * 2;
         video_memory[idx] = 0;
     }       
 }
