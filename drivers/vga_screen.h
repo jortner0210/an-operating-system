@@ -15,6 +15,10 @@
 //
 // Note: Cursor location is set by the number of chars into array.
 //
+// DOCS:
+//  - https://en.wikipedia.org/wiki/VGA_text_mode#ref_text_buffer_1
+//  - http://www.osdever.net/FreeVGA/vga/crtcreg.htm#0E
+//
 
 #define VGA_VIDEO_MEMORY 0xb8000
 
