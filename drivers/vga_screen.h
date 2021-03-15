@@ -21,12 +21,19 @@
 #define VGA_BUFFER_HEIGHT 25
 #define VGA_BUFFER_WIDTH  80
 
+
+#define VGA_MAX_ROWS 25
+#define VGA_MAX_COLS 80
+
+
 // Default color scheme
 #define WHITE_ON_BLACK 0x0f
 
 // Screen device I/O ports
 #define VGA_ADDRESS_REG 0x3d4
-#define VGA_DATA_REG    0x3d5
+
+#define VGA_CTRL_REG 0x3d4
+#define VGA_DATA_REG 0x3d5
 
 // VGA Registers
 #define VGA_CURSOR_LOCATION_HIGH 0x0e
@@ -83,9 +90,9 @@ enum vga_colors
 
 /*---------------------- EXTERNAL API ----------------------------*/
 
-void vga_get_cursor_location(int *row, int *col);
+void vga_get_cursor_position(int *row, int *col);
 
-int vga_set_cursor_location(int row, int col);
+int vga_set_cursor_position(int row, int col);
 
 void vga_clear_screen();
 
@@ -97,7 +104,7 @@ static int vga_print_char(unsigned char c, int row, int col, unsigned char attri
 
 static int vga_get_cell_offset(int row, int col);
 
-static void scroll_screen();
+static void vga_scroll_screen();
 
 int vga_clear_row(int row);
 

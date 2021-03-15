@@ -5,19 +5,17 @@
 
 void main() {
 
-    vga_set_cursor_location(0, 0);
+    
     vga_clear_screen();
+    
+    vga_print_string("Different people look at I/O hardware in different ways. Electrical engineers look at it in terms ofchips, wires, power supplies, motors, and all the other physical components that make up thehardware. Programmers look at the interface presented to the softwarethe commands thehardware accepts, the functions it carries out, and the errors that can be reported back. In thisbook we are concerned with programming I/O devices, not designing, building, or maintainingthem, so our interest will be restricted to h\n", WHITE_ON_BLACK);
 
-    vga_print_string("To print a character to the screen in VGA text mode, one has to write it to the text buffer of the VGA hardware. The VGA text buffer is a two-dimensional array with typically 25 rows and 80 columns, which is directly rendered to the screen. Each array entry describes a single screen character through the following format:\n", WHITE_ON_BLACK);
-    
-    //for (int i = 0; i < 21; i++) {
-    //    if (i % 2 == 0) {
-    //        vga_print_string("Another line test\n", WHITE_ON_BLACK);
-    //    }
-    //    else {
-    //        vga_print_string("TESTING PRINT\n", WHITE_ON_BLACK);
-    //    }
-    //}
-    
+    for (int i = 0; i < 17; i++) {
+        if (i % 2) 
+            vga_print_string("EVEN PRINT\n", WHITE_ON_BLACK);
+        else
+            vga_print_string("odd print\n", WHITE_ON_BLACK);
+    }
+ 
 }
 
