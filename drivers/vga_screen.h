@@ -32,6 +32,8 @@
 #define VGA_CTRL_REG 0x3d4
 #define VGA_DATA_REG 0x3d5
 
+#define VGA_DATA_PORT 0x3d5
+
 // VGA Registers
 #define VGA_CURSOR_LOCATION_HIGH 0x0e
 #define VGA_CURSOR_LOCATION_LOW  0x0f

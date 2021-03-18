@@ -5,6 +5,9 @@
 
 /*---------------------- EXTERNAL API ----------------------------*/
 
+//
+// Get the row and col of the cursor position.
+//
 void vga_get_cursor_position(int *row, int *col)
 {
     int offset;
@@ -17,6 +20,9 @@ void vga_get_cursor_position(int *row, int *col)
     (*col) = offset % VGA_MAX_COLS;
 }
 
+//
+// Set the location of the cursor given a row and col.
+//
 int vga_set_cursor_position(int row, int col)
 {
     if (row >= VGA_MAX_ROWS || col >= VGA_MAX_COLS) {
@@ -42,7 +48,8 @@ void vga_clear_screen()
     for (int i = 0; i < VGA_MAX_ROWS; i++) {
         for (int j = 0; j < VGA_MAX_COLS; j++) {
             int idx = (i * VGA_MAX_COLS + j) * 2;
-            video_memory[idx] = 0;
+            video_memory[idx] = VGA_BG_BLACK;
+            video_memory[idx+1] = VGA_FG_WHITE;
         }       
     }
     vga_set_cursor_position(0, 0);
@@ -53,6 +60,7 @@ void vga_print_string(char *string, unsigned char attribute)
     int idx = 0;
     int cur_row, cur_col;
 
+    // Print each character until null-terminating character.
     while (string[idx] != '\0') {
         vga_get_cursor_position(&cur_row, &cur_col);
 
@@ -61,10 +69,16 @@ void vga_print_string(char *string, unsigned char attribute)
         }
 
         cur_col++;
-                        
+
+        // Shift to the next row if new line character found or the
+        // end of the column is reached.                
         if (string[idx] == '\n' || cur_col >= VGA_MAX_COLS) {
             cur_row++;
             int rc = vga_set_cursor_position(cur_row, 0);
+
+            // If return code is zero then set cursor failed because
+            // all of the rows have been filled. Scroll and clear
+            // bottom row.
             if (rc == 0) {
                 vga_scroll_screen();
                 vga_set_cursor_position(VGA_MAX_ROWS - 1, 0);
@@ -73,6 +87,7 @@ void vga_print_string(char *string, unsigned char attribute)
             }
         }
         else {
+            // Simple cursor increment.
             vga_set_cursor_position(cur_row, cur_col);
         }
 
@@ -82,6 +97,9 @@ void vga_print_string(char *string, unsigned char attribute)
 
 /*---------------------- INTERNAL API ----------------------------*/
 
+//
+// Single Character print at given row and col.
+//
 static int vga_print_char(unsigned char c, int row, int col, unsigned char attibute)
 {
     int offset = vga_get_cell_offset(row, col);
@@ -100,6 +118,9 @@ static int vga_get_cell_offset(int row, int col)
     return (row * VGA_MAX_COLS + col) * 2;
 }
 
+//
+// Shift all rows up by one. Top row is deleted completely.
+//
 static void vga_scroll_screen()
 {
     char *video_memory = (char *)VGA_VIDEO_MEMORY;
@@ -110,6 +131,9 @@ static void vga_scroll_screen()
     }
 }
 
+//
+// Clears any content in a given row.
+//
 static int vga_clear_row(int row)
 {
     char *video_memory = (char *)VGA_VIDEO_MEMORY;

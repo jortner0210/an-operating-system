@@ -12,9 +12,19 @@ print_string_loop:
     int 0x10              ; Call interrupt
     inc bx                ; Increment current character
     cmp byte [bx], 0      ; Check for null
-    jne print_string_loop ; Return to print_string loop
+    je print_string_done
 
-    jmp print_string_done
+    cmp byte [bx], 0x0d   ; Check for new line
+    je print_string_new_line
+    
+    jmp print_string_loop ; Return to print_string loop  
+
+print_string_new_line:
+    mov al, 0x0a          ; Print carriage return and line feed.
+    int 0x10              ; Then jump back to print string loop.
+    mov al, 0x0d
+    int 0x10
+    jmp print_string_loop
 
 print_string_done:
     popa
