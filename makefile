@@ -1,5 +1,5 @@
 # Automatically  generate  lists  of  sources  using  wildcards.
-C_SOURCES = $(wildcard  kernel/*.c drivers/*.c)
+C_SOURCES = $(wildcard  kernel/*.c kernel/sys/*.c drivers/*.c)
 HEADERS = $(wildcard  kernel/*.h drivers/*.h)
 
 # TODO: Make sources  dep on all  header  files.

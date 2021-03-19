@@ -1,7 +1,6 @@
 #include "vga_screen.h"
 
-#include "../kernel/x86asm.h"
-#include "../kernel/utils.h"
+#include "../kernel/sys.h"
 
 /*---------------------- EXTERNAL API ----------------------------*/
 

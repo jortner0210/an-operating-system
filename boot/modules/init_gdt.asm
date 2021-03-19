@@ -44,3 +44,4 @@ gdt_descriptor:
 ; the DATA segment (0x0 -> NULL; 0x08 -> CODE; 0x10 -> DATA)
 CODE_SEG equ gdt_code - gdt_start 
 DATA_SEG equ gdt_data - gdt_start
+
