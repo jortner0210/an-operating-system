@@ -2,7 +2,8 @@
 
 void memcopy(unsigned char *dest, unsigned char *src, int bytes)
 {
-    for (int i = 0; i < bytes; i++)
+    int i;
+    for (i = 0; i < bytes; i++)
         dest[i] = src[i];
 }
 

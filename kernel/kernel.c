@@ -17,8 +17,8 @@ void main() {
     
     uint16_t x = 10;
 
-    asm volatile ("int $0x0");
-    asm volatile ("int $0x1"); 
+    __asm volatile ("int $0x0");
+    __asm volatile ("int $0x1"); 
 
     vga_print_string("another string\n", VGA_FG_CYAN | VGA_BG_GRAY);
 }
