@@ -10,5 +10,5 @@
     - At the bochs terminal prompt type c for continue executing
     - Press enter and choose 'kernel'
 
-# Screen Shot VGA string prints:
+# VGA Screen Shot:
 ![alt text](./other/vga_print_colors.png)
