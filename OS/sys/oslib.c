@@ -14,9 +14,8 @@ void memcopy
 {
     char *d = (char *)dest;
     char *s = (char *)src;
-    for (int i = 0; i < bytes; i++) {
+    for (int i = 0; i < bytes; i++)
         d[i] = s[i];
-    }
 }
 
 //
