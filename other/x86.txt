@@ -1,0 +1,156 @@
+- Print hex of binary: od -t x1 -A n <file_name>
+
+- Useful interrupts:
+    * int 10/ah = 0eh -> scrolling teletype BIOS routine
+        - prints character located in register al
+
+    * int 13/ah = 0x02 -> BIOS read sector function
+        - dl = drive number to read from (base 0)
+        - ch = cylinder number (base 1)
+        - dh = side to use (base 0: 0 - first side or 1 - second side)
+        - cl = sector number on the track (base 1)
+        - al = how many sectors to read from the start point
+        - es:bx = the address we'd like BIOS to read the sectors to
+        
+        - Results:
+            + CF flag = set when read error occurs
+            + al = set to number of sectors ACTUALLY read, opposed to the number requested
+            + example check:
+                int 0x13
+                jc disk_error ; jump if carry flag was set
+                
+                cmp al, <no. sectors expected>
+                jne disk_error ; jump if read sectors != expected sectors
+
+                disk_error:
+                    mov bx, DISK_ERROR_MSG
+                    call print_string
+                    jmp $
+
+                DISK_ERROR_MSG: db "Disk read error!",0                
+
+- All x86 CPUs have four general purpose registers:
+    * ax, bx, cx, dx: max size = 2 bytes
+
+- BIOS loads boot sector to address: 0x7c00
+
+- The stack is implemented by registers: bp and sp (address to stack bottom and top)
+
+- The following jump instructions are available base on: cmp x, y
+    * je   target   ; jump if equal                    (i.e. x == y)
+    * jne  target   ; jump if not  equal               (i.e. x != y)
+    * jl   target   ; jump if less  than               (i.e. x < y)
+    * jle  target   ; jump if less  than or  equal     (i.e. x  <= y)
+    * jg   target   ; jump if  greater  than           (i.e. x > y)
+    * jge  target   ; jump if  greater  than or  equal (i.e. x  >= y)
+
+- Functions in x86 Assembly:
+    * pusha and popa so the function doesn't destroy
+      any values stored in the general purpose registers.
+
+    * Definition:
+        some_function:
+            pusha   ; push all register values to the stack
+            ...     ; function body
+            popa    ; restore register values
+            ret
+
+    * Invocation:
+        call some_function
+    
+- Include: %include "file_name.asm"
+
+- Segment Registers:
+    * Main memory is divided into segments, indexed by special registers
+    
+    * cs, ds, ss, es
+
+- 32 bit protected mode:
+    * 32 bit registers accessed with prefix 'e', i.e. ebx
+
+    * Two additional general purpose segment registers: fs, gs
+
+    * The CPU supports a more sophisticated means of memory segmentation:
+        + Code in one segment can be prohibited from executing code in another
+          more privilidged segment, so you can protect the kernel code from user
+          applications.
+
+        + The CPU can implement virtual memory for user processes such that pages, 
+          (fixed sized chunks) of a process's memory can be swapped transparently
+          between the disk and memory on an as needed basis.
+    
+    * Must define a data structure call the global descriptor table (GDT)
+        + defines memory segments and their protected-mode attributes
+
+    * CAN'T USE BIOS IN 32 BIT MODE
+        + must provide own drivers for: keyboard, screen, disk drives, mouse
+
+- Video Graphics Array (VGA) color text mode:
+    * Usually Address: 0xb8000
+
+    * Dimensions 80x25 characters
+
+    * A simple font is defined in the internal memory of the VGA display device
+
+    * Each character cell of the screen is represented by two bytes in memory:
+        + first: ASCII code of character
+        + second: encodes the character's attributes
+            - foreground, background, blinking
+
+- Global Descriptor Table:
+    * Fundamental to the operation of protected mode
+
+    * In 32 bit mode a segment register becomes an index to a particular
+      segment descriptor in the GDT
+
+    * A segment descriptor is an 8-byte structure that defines the 
+      following properties of a pretected-mode segment:
+        + Base address (32-bits), which defines where the segment begins
+          in physical memory
+        + Segment Limit (20 bits), which defines the size of the segment
+        + Various flags, which affect how the CPU interprets the segment,
+          such as the privilige level of code that runs winit it or whether
+          it is read or write only.
+
+- Code segment will have following configuration:
+    * Base: 0x0
+    * Limit: 0xfffff
+    * Present: 1, since segment is present in memory - used for virtual memory
+    * Privilige: 0, ring 0 is the highest privilige
+    * Type:
+        - Code: 1 for code since this is a code segment
+        - Conforming: 0, by not conforming it means code in a segment with a lower
+                      privilige may not call code in this segment - memory protection
+        - Readable: 1, 1 if readable, 0 if execute only. Readable allows us to read
+                    constants defined in the code.
+        - Accessed: 0, this is often used for debugging and vm techniques,
+                    since the CPU sets the bit when it accesses the segement.
+    * Other Flags:
+        - Granularity: 1, if set this multiplies limit of 4K allowing segment to span 4GB
+        - 32-bit default: 1, since our segment will hold 32-bit code, otherwise use 0 for 16-bit
+        - 64-bit code segment: 0, unused on 32-bit processor
+        - AVL: 0, debugging uses
+
+- GDT descriptor:
+    * 6 byte structure
+        + GDT size: 16 bits
+        + GDT address: 32 bits
+
+- Switch to 32-bit protected mode:
+    * First: disable interrupts using cli (clear interrupt)
+    * Second: tell the CPU about the GDT 
+        - lgdt [gdt_descriptor]
+    * Last: set the first bit of special CPU control register (cr0)
+        - must be set indirectly
+        mov eax, cr0 ; To make the switch to protected mode, we set
+        or eax, 0x1  ; the first bit of CRO, a control register.
+        mov cr0, eac
+    * Last Last: instruct the CPU to finish any jobs in its pipeline
+                 to ensure that all future instructions will be executed
+                 in the correct mode.
+        - Issuing a far jump will force the CPU to flush the pipeline 
+        jmp <segment>:<address offset>
+
+- Kernel Code:
+    * Compiling C code:
+        - -Ttext 0x0

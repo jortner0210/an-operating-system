@@ -3,14 +3,12 @@
 # Install:
     - First install Bochs Emulator: http://bochs.sourceforge.net/getcurrent.html
     - Run commands:
+        * cd OS
         * mkdir bin
         * make all
         * make run
     - At the bochs terminal prompt type c for continue executing
-    - Press enter
+    - Press enter and choose 'kernel'
 
-# Supported Drivers:
-
-## VGA Screen:
-    - int vga_set_cursor_location(int row, int col)
-    - void vga_clear_screen()
+# Screen Shot VGA string prints:
+![alt text](./other/vga_print_colors.png)
