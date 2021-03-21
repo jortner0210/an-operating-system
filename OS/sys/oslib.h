@@ -11,7 +11,7 @@
 
 /*---------------------- MEMORY FUNCTIONS ----------------------------*/
 
-void memcopy
+void memcpy
 (
     void *dest, 
     void *src,

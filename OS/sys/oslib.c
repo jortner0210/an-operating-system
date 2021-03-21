@@ -5,7 +5,7 @@
 //
 // Copy bytes from one location to another.
 //
-void memcopy
+void memcpy
 (
     void *dest, 
     void *src,

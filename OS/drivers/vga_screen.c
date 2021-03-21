@@ -202,7 +202,7 @@ static void vga_scroll_screen()
     for (int i = 1; i < VGA_ROWS; i++) {
         uint16_t dest_idx = TWO_TO_ONE((i-1), 0, VGA_COLUMNS) * 2;
         uint16_t src_idx = TWO_TO_ONE(i, 0, VGA_COLUMNS) * 2;
-        memcopy(&vm[dest_idx], &vm[src_idx], VGA_COLUMNS * 2);
+        memcpy(&vm[dest_idx], &vm[src_idx], VGA_COLUMNS * 2);
     }
 
     if (cursor_r != 0 && cursor_r != (VGA_ROWS - 1)) {
