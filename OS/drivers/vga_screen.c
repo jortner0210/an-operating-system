@@ -146,6 +146,7 @@ uint8_t vga_print_string
             col = 0;
         }
         else {
+            // Copy character to video memory
             vga_put_char(row, col, string[char_idx], attr);
             col++;
             
@@ -197,6 +198,7 @@ static void vga_scroll_screen()
 
     vga_get_cusor(&cursor_r, &cursor_c);
 
+    // Copy each row to the row before.
     for (int i = 1; i < VGA_ROWS; i++) {
         uint16_t dest_idx = TWO_TO_ONE((i-1), 0, VGA_COLUMNS) * 2;
         uint16_t src_idx = TWO_TO_ONE(i, 0, VGA_COLUMNS) * 2;
@@ -229,9 +231,9 @@ static uint8_t vga_clear_row
 
         memset(&vm[idx], 0, VGA_COLUMNS * 2);
 
-        // Reset cursor at its current postion in case. 
-        // If cursor is on cleared row it will also be cleared
-        // without resetting it.
+        // Reset cursor to its current postion. 
+        // If cursor is located at cleared row it will also 
+        // be cleared if it isn't reset.
         vga_get_cusor(&cursor_r, &cursor_c);
         vga_put_cursor(cursor_r, cursor_c);
     }
