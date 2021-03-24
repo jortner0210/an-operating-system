@@ -1,6 +1,8 @@
 CC=gcc
 ISYS=../sys
-CFLAGS=-I$(ISYS)
+IDRIVERS=../drivers
+IKERNEL=../kernel
+CFLAGS=-I$(ISYS) -I$(IKERNEL) -I$(IDRIVERS)
 
 ODIR=../bin
 

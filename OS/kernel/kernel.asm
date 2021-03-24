@@ -22,8 +22,11 @@ extern kmain	        ; kmain is defined in the c file
 start:
   cli 			           ; block interrupts
   mov esp, stack_space ; set stack pointer
+
   call kmain
   hlt		 	             ; halt the CPU
+
+%include "descriptor_tables.asm"
 
 section .bss
 resb 8192		; 8KB for stack

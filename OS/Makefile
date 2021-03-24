@@ -23,4 +23,5 @@ run:
 
 clean:
 	rm -rf isodir
-	cd bin && rm -rf *.o *.bin
+	rm -rf kernel.iso
+	cd bin && rm -rf *.o *.bin 
