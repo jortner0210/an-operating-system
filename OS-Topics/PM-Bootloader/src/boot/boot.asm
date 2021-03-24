@@ -1,5 +1,7 @@
 ;
+; Kernel Boot Sector Program
 ;
+; Source: https://www.udemy.com/course/developing-a-multithreaded-kernel-from-scratch/
 ;
 
 [org 0x7c00] 
