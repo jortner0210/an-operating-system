@@ -25,4 +25,6 @@ void memset
     size_t bytes
 );
 
+/*---------------------- STRING FUNCTIONS ----------------------------*/
+
 #endif
