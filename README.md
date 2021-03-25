@@ -5,7 +5,7 @@
         * Linux: sudo apt install qemu-system-x86
     - Run commands:
         * cd OS
-        * mkdir bin
+        * mkdir bin build
         * ./build.sh
         * make run
 
