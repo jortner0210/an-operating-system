@@ -1,14 +1,13 @@
 # A simple Bootloader and x86 Kernel
 
 # Install:
-    - First install Bochs Emulator: http://bochs.sourceforge.net/getcurrent.html
+    - First install qemu emulator: 
+        * Linux: sudo apt install qemu-system-x86
     - Run commands:
         * cd OS
         * mkdir bin
-        * make all
+        * ./build.sh
         * make run
-    - At the bochs terminal prompt type c for continue executing
-    - Press enter and choose 'kernel'
 
 # VGA Screen Shot:
 ![alt text](./other/vga_print_colors.png)
