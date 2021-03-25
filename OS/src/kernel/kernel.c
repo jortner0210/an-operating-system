@@ -5,6 +5,7 @@ void test_vga_colors();
 
 void kernel_main()
 {
+
     vga_clear_screen(VGA_RESET_CURSOR);
 
     test_vga_colors();

@@ -92,7 +92,7 @@ void vga_clear_screen
     enum VGA_CS_CUR_OPT cursor
 );
 
-uint8_t vga_print_string
+void vga_print_string
 (
     char *string,
     uchar_t attr

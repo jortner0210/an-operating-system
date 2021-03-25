@@ -8,15 +8,18 @@
 
 /*---------------------- EXTERNAL API ----------------------------*/
 
-//
-// Places the cursor at a position (row, col).
-//
-// Because the cursor display is described by the attribute
-// of the character where it is positioned, when cursor is
-// placed, the character attribute will change as a consequence.
-//
-// Returns 0 fail, 1 success.
-//
+/**
+ * @brief Places the cursor at a position (row, col).
+ * 
+ *        Because the cursor display is described by the attribute
+ *        of the character where it is positioned, when cursor is
+ *        placed, the character attribute will change as a consequence.
+ *        This shouldn't be a problem if you aren't messing with the cursor.
+ * 
+ * @param r: uint8_t - row 
+ * @param c: uint8_t - col  
+ * @return uint8_t: 0 fail, 1 success
+ */
 uint8_t vga_put_cursor
 (
     uint8_t r, 
@@ -41,9 +44,12 @@ uint8_t vga_put_cursor
         return 0;
 }
 
-//
-// Retreive the cursor position (row, col).
-//
+/**
+ * @brief Retreive the cursor position (row, col).
+ * 
+ * @param r: uint8_t pointer to receive row 
+ * @param c: uint8_t pointer to receive col 
+ */
 void vga_get_cusor
 (
     uint8_t *r, 
@@ -59,11 +65,15 @@ void vga_get_cusor
     (*c) = ONE_TO_COL(idx, VGA_COLUMNS);
 }
 
-//
-// Places a character at a position (row, col).
-//
-// Returns 0 fail, 1 successful.
-//
+/**
+ * @brief Places a character at a position (row, col).
+ * 
+ * @param r: uint8_t - row
+ * @param c: uint8_t - col 
+ * @param character: ASCII character to print 
+ * @param attr: The byte representing the character's attributes
+ * @return uint8_t: 0 fail, 1 successful
+ */
 uint8_t vga_put_char
 (
     uint8_t r, 
@@ -89,10 +99,11 @@ uint8_t vga_put_char
         return 0;
 }
 
-//
-// Clears the screen and sets all character attributes to 0.
-// Side effect is that the cursor will not be visible.
-//
+/**
+ * @brief Clears the screen and sets all character attributes to 0.
+ * 
+ * @param cursor: Options: VGA_KEEP_CURSOR, VGA_RESET_CURSOR, VGA_CLEAR_CURSOR
+ */
 void vga_clear_screen
 (
     enum VGA_CS_CUR_OPT cursor
@@ -125,12 +136,15 @@ void vga_clear_screen
     }
 }
 
-//
-//  Print a null terminate string to the terminal using the cursor position.
-//  The screen will scroll when writing past the last line.  
-//  Newline character: "\n"
-//
-uint8_t vga_print_string
+/**
+ * @brief Print a null terminate string to the terminal using the cursor position.
+ *        The screen will scroll when writing past the last line.  
+ *        Newline character: "\n"
+ * 
+ * @param string: Null-terminated string.
+ * @param attr: The byte representing the character's attributes.
+ */
+void vga_print_string
 (
     char *string,
     uchar_t attr
@@ -168,18 +182,17 @@ uint8_t vga_print_string
 
         char_idx++;
     }
-
-    return 1;
 }
 
 /*---------------------- INTERNAL API ----------------------------*/
 
-//
-// Checks that a character position (row, col) is within the 
-// bounds of video memory.
-//
-// Returns 0 if position is out of bounds and 1 if in bounds.
-//
+/**
+ * @brief Checks that a character position (row, col) is within the memory bounds.
+ * 
+ * @param r: uint8_t - row
+ * @param c: uint8_t - col 
+ * @return uint8_t: 0 if position is out of bounds and 1 if in bounds.
+ */
 static uint8_t vga_position_inbounds
 (
     uint8_t r,
@@ -193,9 +206,10 @@ static uint8_t vga_position_inbounds
         return 0;
 }
 
-//
-// Move each line up by one. Clears the last line.
-//
+/**
+ * @brief Move each line up by one. Clears the last line.
+ * 
+ */
 static void vga_scroll_screen()
 {
     uchar_t *vm = VGA_VM_PTR;
@@ -218,10 +232,12 @@ static void vga_scroll_screen()
     vga_put_cursor(cursor_r, cursor_c);
 }
 
-//
-// Clear all character in a row.
-// Returns 0 fail, 1 success
-//
+/**
+ * @brief Clear a row of all characters and attributes.
+ * 
+ * @param r: uint8_t - row 
+ * @return uint8_t: 0 fail, 1 success
+ */
 static uint8_t vga_clear_row
 (
     uint8_t r
